@@ -1,0 +1,54 @@
+<h1>Search your flight here!</h1><br>
+
+<%= form_with url: flights_path, method: :get do%>
+
+<div>
+    <%= label_tag :departure_airport, "Departure Airport" %>
+    <%= select_tag :departure_airport, options_for_select(@airports, params[:departure_airport]), include_blank: "Select an airport"%>
+</div>
+
+<div>
+    <%= label_tag :arrival_airport, "Arrival Airport" %>
+    <%= select_tag :arrival_airport, options_for_select(@airports, params[:arrival_airport]), include_blank: "Select an airport"%>
+</div>
+
+<div>
+    <%= label_tag :date, "Date" %>
+    <%= select_tag :date, options_for_select(@dates, params[:date]), include_blank: "Select a date"%>
+</div>
+
+<div>
+    <%= label_tag :num_passengers, "Number of Passengers" %>
+    <%= select_tag :num_passengers, options_for_select(@num_passengers, params[:num_passengers]), include_blank: "Select the number of Passengers"%>
+</div>
+
+ <%= submit_tag "Search Flights" %>
+
+<%end%>
+
+<h2>Available Flights</h2>
+
+<% if @flights.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Departure</th>
+        <th>Arrival</th>
+        <th>Departure Time</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @flights.each do |flight| %>
+        <tr>
+          <td><%= flight.departure_airport.name %></td>
+          <td><%= flight.arrival_airport.name %></td>
+          <td><%= flight.departure_time.strftime("%B %d, %Y %I:%M %p") %></td>
+          <td><%= flight.duration_minutes %> minutes</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No flights found.</p>
+<% end %>

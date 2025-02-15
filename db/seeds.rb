@@ -13,7 +13,7 @@ airports = airport_codes.map { |code| Airport.create!(name: "Airport #{code}", c
   Flight.create!(
     departure_airport: departure_airport,
     arrival_airport: arrival_airport,
-    departure_time: Faker::Time.forward(days: 30, period: :morning),
+    departure_time: Faker::Time.forward(days: 5, period: :all),
     duration_minutes: rand(60..600)
   )
 end

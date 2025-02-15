@@ -1,34 +1,37 @@
 <h1>Search your flight here!</h1><br>
 
-<%= form_with url: flights_path, method: :get do%>
+<%= form_with url: flights_path, method: :get do |f|%>
 
 <div>
-    <%= label_tag :departure_airport, "Departure Airport" %>
-    <%= select_tag :departure_airport, options_for_select(@airports, params[:departure_airport]), include_blank: "Select an airport"%>
+    <%= f.label :departure_airport, "Departure Airport" %>
+    <%= f.select :departure_airport, options_for_select(@airports, params[:departure_airport]), include_blank: "Select an airport"%>
 </div>
 
 <div>
-    <%= label_tag :arrival_airport, "Arrival Airport" %>
-    <%= select_tag :arrival_airport, options_for_select(@airports, params[:arrival_airport]), include_blank: "Select an airport"%>
+    <%= f.label :arrival_airport, "Arrival Airport" %>
+    <%= f.select :arrival_airport, options_for_select(@airports, params[:arrival_airport]), include_blank: "Select an airport"%>
 </div>
 
 <div>
-    <%= label_tag :date, "Date" %>
-    <%= select_tag :date, options_for_select(@dates, params[:date]), include_blank: "Select a date"%>
+    <%= f.label :date, "Date" %>
+    <%= f.select :date, options_for_select(@dates, params[:date]), include_blank: "Select a date"%>
 </div>
 
 <div>
-    <%= label_tag :num_passengers, "Number of Passengers" %>
-    <%= select_tag :num_passengers, options_for_select(@num_passengers, params[:num_passengers]), include_blank: "Select the number of Passengers"%>
+    <%= f.label :num_passengers, "Number of Passengers" %>
+    <%= f.select :num_passengers, options_for_select(@num_passengers, params[:num_passengers]), include_blank: "Select the number of Passengers" %>
 </div>
 
- <%= submit_tag "Search Flights" %>
+ <%= f.submit "Search Flights" %>
 
 <%end%>
 
 <h2>Available Flights</h2>
 
 <% if @flights.any? %>
+  <%= form_with url: new_booking_path, method: :get do |f|%>
+  <%= f.hidden_field :num_passengers, value: params[:num_passengers] %>
+  <%= debug(params) if Rails.env.development? %>
   <table>
     <thead>
       <tr>
@@ -36,6 +39,7 @@
         <th>Arrival</th>
         <th>Departure Time</th>
         <th>Duration</th>
+        <th>Select Flight</th>
       </tr>
     </thead>
     <tbody>
@@ -45,10 +49,13 @@
           <td><%= flight.arrival_airport.name %></td>
           <td><%= flight.departure_time.strftime("%B %d, %Y %I:%M %p") %></td>
           <td><%= flight.duration_minutes %> minutes</td>
+          <td><%= f.radio_button :flight_id, flight.id, required: true %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
+  <%= f.submit "Make Booking"%>
+  <%end%>
 <% else %>
   <p>No flights found.</p>
 <% end %>

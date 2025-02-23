@@ -1,26 +1,54 @@
 <h1>Booking</h1><br>
 
-<%= form_with model: @booking do |f|%>
+<h1>Booking</h1><br>
+
+<div data-controller="passenger">
+  <%= form_with model: @booking do |f| %>
     <%= f.hidden_field :flight_id, value: @flight.id %>
-    <%= f.hidden_field :num_passengers, value: @num_passengers %>
-    
+    <%= f.hidden_field :num_passengers, value: @num_passengers, id: "booking_num_passengers" %>
+
     <h3>Selected Flight</h3>
-    <%= "Departure Airport: #{@flight.departure_airport.name}"%><br>
-    <%= "Arrival Airport: #{@flight.arrival_airport.name}"%><br>
-    <%= "Departure Time: #{@flight.departure_time.strftime("%B %d, %Y %I:%M %p")} "%><br>
-    <%= "Number of Passengers: #{@num_passengers}"%>
+    <p>Departure Airport: <%= @flight.departure_airport.name %></p>
+    <p>Arrival Airport: <%= @flight.arrival_airport.name %></p>
+    <p>Departure Time: <%= @flight.departure_time.strftime("%B %d, %Y %I:%M %p") %></p>
+    <p>Number of Passengers: <%= @num_passengers %></p>
 
-    <h3>Enter Passenger Detail:</h3>
-        <%= f.fields_for :passengers do |sub_f|%>
-            <div>
-            <%= sub_f.label :name, "Passenger Name"%>
-            <%= sub_f.text_field :name%>
-            </div>
+    <h3>Enter Passenger Details:</h3>
 
-            <div>
-            <%= sub_f.label :email, "Passenger Email"%>
-            <%= sub_f.email_field :email%>
-            </div>
-        <%end%>
-    <%= f.submit "Submit"%>
-<%end%>
+    <div data-passenger-target="container">
+      <%= f.fields_for :passengers do |sub_f| %>
+        <div class="passenger-fields">
+          <div>
+            <%= sub_f.label :name, "Passenger Name" %>
+            <%= sub_f.text_field :name %>
+          </div>
+          <div>
+            <%= sub_f.label :email, "Passenger Email" %>
+            <%= sub_f.email_field :email %>
+          </div>
+          <button data-action="click->passenger#remove" class="remove-passenger">Remove</button>
+        </div>
+      <% end %>
+    </div>
+
+    <button data-action="click->passenger#add" class="add-passenger">Add Passenger</button>
+
+    <template data-passenger-target="template">
+      <div class="passenger-fields">
+        <%= f.fields_for :passengers, Passenger.new, child_index: "NEW_INDEX" do |sub_f| %>
+          <div>
+            <%= sub_f.label :name, "Passenger Name" %>
+            <%= sub_f.text_field :name, name: "booking[passengers_attributes][NEW_INDEX][name]" %>
+          </div>
+          <div>
+            <%= sub_f.label :email, "Passenger Email" %>
+            <%= sub_f.email_field :email, name: "booking[passengers_attributes][NEW_INDEX][email]" %>
+          </div>
+          <button data-action="click->passenger#remove" class="remove-passenger">Remove</button>
+        <% end %>
+      </div>
+    </template>
+
+    <%= f.submit "Submit" %>
+  <% end %>
+</div>

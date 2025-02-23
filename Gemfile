@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem "letter_opener", group: :development
+gem "stripe"
 gem "pg"
 gem "faker"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"

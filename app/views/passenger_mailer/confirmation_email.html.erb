@@ -1,0 +1,18 @@
+<h1>Your booking is confirmed!</h1>
+
+<p>
+  This is to confirm your flight on: <%= @booking.flight.departure_time.strftime("%B %d, %Y at %I:%M %p") %>.<br>
+</p>
+
+<h3>Passengers:</h3>
+<ul>
+  <% @booking.passengers.each do |passenger| %>
+    <li><strong><%= passenger.name %></strong> (<%= passenger.email %>)</li>
+  <% end %>
+</ul>
+
+<p>
+  You can view your booking details here: <%= link_to "Show my booking", booking_url(@booking) %>.
+</p>
+
+<p>Thanks for booking with us! Have a great trip! ✈️</p>
